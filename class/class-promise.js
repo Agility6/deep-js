@@ -7,6 +7,7 @@ class Mypromise {
   constructor(executor) {
     this.status = STATUS.PENDING
     this.value = undefined
+    
     this.callbacks = []
 
     const resolve = value => {
@@ -23,7 +24,7 @@ class Mypromise {
       this.status = STATUS.REJECTED
       this.value = reason
       this.callbacks.forEach(item => {
-        item.onRejected(value)
+        item.onRejected(reason)
       })
     }
     try {
@@ -86,5 +87,63 @@ class Mypromise {
 
   catch(onRejected) {
     return this.then(undefined, onRejected)
+  }
+
+  static resolve(value) {
+    return new Mypromise((resolve, reject) => {
+      if(value instanceof Promise) {
+        value.then(v => {
+          resolve(v)
+        },r => {
+          reject(r)
+        })
+      } else {
+        resolve(value)
+      }
+    })
+  }
+
+  static reject(reason) {
+    return new Mypromise((resolve, reject) => {
+      reject(reason)
+    })
+  }
+
+  static all(promise) {
+    return new Mypromise((resolve, reject) => {
+      let arr = []
+      let count = 0
+      for(let i = 0; i < promise.length; i++) {
+        if(promise[i] instanceof Promise || promise[i] instanceof Mypromise) {
+          promise[i].then((v) => {
+            count++
+            arr[i] = v
+            if(count === promise.length) {
+              resolve(arr)
+            }
+          },r => {
+            reject(r)
+          })
+        } else {
+          count++
+          arr[i] = promise[i]
+          if(count === promise.length) {
+            resolve(arr)
+          }
+        }
+      }
+    })
+  }
+
+  static race(promise) {
+    return new Promise((resolve, reject) => {
+      promise.forEach(promiseItem => {
+        promiseItem.then(v => {
+          resolve(v)
+        }, r => {
+          reject(r)
+        })
+      })
+    })
   }
 }
