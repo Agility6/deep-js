@@ -147,3 +147,5 @@ class Mypromise {
     })
   }
 }
+
+export default Mypromise

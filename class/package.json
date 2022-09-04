@@ -1,0 +1,13 @@
+{
+  "name": "class",
+  "version": "1.0.0",
+  "description": "1. 文章地址: https://agility6.cn/posts/class/",
+  "main": "class-constructor.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
