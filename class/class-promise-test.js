@@ -15,13 +15,13 @@ const p = new Mypromise((resolve, reject) => {
   const message = nowLog("状态唯一性")("OK")
   resolve(message)
 }).then(v => {
-  console.log(v)
+  console.log("p: ",v)
 }, r => {
-  console.log(r)
+  console.log("p: ",r)
 })
-console.log(p)
 
-console.log(nowLog("分割线")("- - - - -"))
+console.log("p: ", p)
+
 
 /**
  * 异步调用
@@ -29,14 +29,13 @@ console.log(nowLog("分割线")("- - - - -"))
 const p2 = new Mypromise((resolve, reject) => {
   const message = nowLog("异步调用")("OK")
   setTimeout(() => {
-    resolve(message)
+    resolve("p2: ",message)
   }, 1000)
 })
 setTimeout(() => {
-  console.log(p)
+  console.log("p2: ", p2)
 }, 2000)
 
-console.log(nowLog("分割线")("- - - - -"))
 
 /**
  * all的使用  
