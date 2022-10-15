@@ -1,5 +1,7 @@
 ## Deep-js
 
+**Blog: agility.cn**
+
 This is my code for learning JavaScript🍫
 
 - 🧋 pure-function
@@ -8,4 +10,6 @@ This is my code for learning JavaScript🍫
 
 - 🍔 class
 
-> Blog: agility.cn
+JavaScript30Day
+
+- 🎶 drum kit
