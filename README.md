@@ -17,3 +17,5 @@ JavaScript30Day
 - 🎶 [drum kit](/JavaScript30/01%20-%20JavaScript%20Drum%20Kit/)
 
 - ⏰ [clock](/JavaScript30/02%20-%20JS%20and%20CSS%20Clock/)
+
+- 🏞️ [Variables](/JavaScript30/03%20-%20CSS%20Variables/)
