@@ -21,3 +21,5 @@ JavaScript30Day
 - 🏞️ [Variables](/JavaScript30/03%20-%20CSS%20Variables/)
 
 - 🔢 [Array Cardio](/JavaScript30/04%20-%20Array%20Cardio%20Day%201/)
+
+- 🤸🏻‍♂️ [Flex Panel Gallery](/JavaScript30/05%20-%20Flex%20Panel%20Gallery/)
