@@ -4,11 +4,13 @@
 
 This is my code for learning JavaScript🍫
 
-- 🧋 pure-function
+- 🧋 [pure-function](/pure-function/)
 
-- 🍕 currying
+- 🍕 [currying](/currying/)
 
-- 🍔 class
+- 🍔 [class](/learn-class/)
+
+- 🍫 [Promise](/promise/)
 
 JavaScript30Day
 
