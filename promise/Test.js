@@ -117,3 +117,53 @@ setTimeout(() => {
     console.log('err: ', err)
   })
 }, 1000)
+
+/**
+ * 4.catch方法实现
+ */
+
+// 验证p10的catch方法
+
+const p10 = new Promise((resolve, reject) => {
+  reject('p10 resolve')
+})
+
+p10.then(res => {
+  console.log(res)
+}).catch(err => {
+  console.log(err)
+})
+
+/**
+ * 5.finally方法的实现
+ */
+
+// 验证p11的finally方法
+const p11 = new Promise((resolve, reject) => {
+  resolve('p11 resolve')
+})
+
+p11.then(res1 => {
+  console.log('res1: ', res1)
+}).then(res2 => {
+  console.log('res2: ', res2)
+  throw new Error('err')
+}).catch(err => {
+  console.log('err: ', err)
+}).finally(() => {
+  console.log('我是finally')
+})
+
+// 验证p12的finally方法 情况二
+const p12 = new Promise((resolve, reject) => {
+  resolve('p12 resolve')
+})
+
+p12.then(res => {
+  console.log('res: ', res)
+  return '1'
+}).catch(err => {
+  console.log('err: ', err)
+}).finally(() => {
+  console.log('我是finally')
+})

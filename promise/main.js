@@ -74,38 +74,40 @@ class AgilityPromise {
   }
 
   then(onFulfilled, onRejected) {
+
+    onRejected = onRejected || (err => { throw err })
+
+    onFulfilled = onFulfilled || (value => { return value })
+
     return new AgilityPromise((resolve, reject) => {
       if(this.status === PROMISE_STATUS_PENDING) {
-        this.onFulfilledFns.push(() => {
+        if(onFulfilled) this.onFulfilledFns.push(() => {
           execFunctionWithCatchError(onFulfilled, this.value, resolve, reject)
         })
-        this.onRejectedFns.push(() => {
+        if(onRejected) this.onRejectedFns.push(() => {
           execFunctionWithCatchError(onRejected, this.reason, resolve, reject)
         })
       }
   
       if(this.status === PROMISE_STATUS_FULFILLED && onFulfilled) {
-        execFunctionWithCatchError(onFulfilled, this.value, resolve, reject)
+        if(onFulfilled) execFunctionWithCatchError(onFulfilled, this.value, resolve, reject)
       }
       if(this.status === PROMISE_STATUS_REJECTED && onRejected) {
-        execFunctionWithCatchError(onRejected, this.reason, resolve, reject)
+        if(onRejected)  execFunctionWithCatchError(onRejected, this.reason, resolve, reject)
       }
     })
   }
+
+  catch(onRejected) {
+    return this.then(undefined, onRejected)
+  }
+
+  finally(onFinally) {
+    this.then(() => {
+      onFinally()
+    }, () => {
+      onFinally()
+    })
+  }
+
 }
-
-
-let p = new AgilityPromise((resolve , reject) => {
-  // 异步操作
-  setTimeout(() => {
-    resolve('OK')
-  },1000)
-}) 
-
-p.then(value => {
-  console.log(value)
-},reason => {
-  console.log(reason)
-})
-
-console.log(p)
