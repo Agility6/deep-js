@@ -1,5 +1,6 @@
 /***
  * 在4.Promise会有大量的try catch处理那么我们可以抽取一下
+ * 同时解决一下return一个Promise的情况
  */
 
 // 定义三种状态
@@ -17,7 +18,18 @@ const PROMISE_STATUS_REJECTED = 'rejected'
 function execFunctionWithCatchError(execFn, value, resolve, reject) {
   try {
     const result = execFn(value)
-    resolve(result)
+    // 对result的结果进行判断是否为Promise
+    if(result instanceof AgilityPromise) {
+      // 是为Promise直接调用then方法就可以了
+      result.then( v => {
+        resolve(v)
+      }, err => {
+        reject(err)
+      })
+    } else {
+      // 不是直接调用resolve方法
+      resolve(result)
+    }
   } catch(err) {
     reject(err)
   }

@@ -91,7 +91,7 @@ class AgilityPromise {
       onFulfilled(this.value)
     }
     if(this.status === PROMISE_STATUS_REJECTED && onRejected) {
-      onRejected(this.value)
+      onRejected(this.reason)
     }
   }
 }

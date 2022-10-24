@@ -94,6 +94,9 @@ p8.then(res1 => {
 
   // 2.抛出异常
   // throw new Error('Error')
+
+  // 3.return一个Promise
+  new Promise((resolve, reject) => { resolve('return Promise resolve') })
 }, err1 => {
   console.log('err1: ', err1)
 }).then(res2 => {

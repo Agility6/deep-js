@@ -2,6 +2,11 @@
  * 3.then方法的优化
  * 
  * 通过Test的p8的链式调用
+ * 
+ * 注意：当前的代码不能通过
+ * 3.return一个Promise
+ * 暂时没有对return一个Promise进行判断操作
+ * 在5.Promise中实现
  */
 
 // 定义三种状态

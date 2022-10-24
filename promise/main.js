@@ -4,6 +4,30 @@
  * https://promisesaplus.com/
  */
 
+/**
+ * 
+ * @param {*} execFn 
+ * @param {*} value 
+ * @param {*} resolve 
+ * @param {*} reject 
+ */
+function execFunctionWithCatchError(execFn, value, resolve, reject) {
+  try {
+    const result = execFn(value)
+    if(result instanceof AgilityPromise) {
+      result.then( v => {
+        resolve(v)
+      }, err => {
+        reject(err)
+      })
+    } else {
+      resolve(result)
+    }
+  } catch(err) {
+    reject(err)
+  }
+}
+
 const PROMISE_STATUS_PENDING = 'pending'
 const PROMISE_STATUS_FULFILLED = 'fulfilled'
 const PROMISE_STATUS_REJECTED = 'rejected'
@@ -18,8 +42,9 @@ class AgilityPromise {
     
     const resolve = value => {
       if(this.status === PROMISE_STATUS_PENDING) {
-        this.status = PROMISE_STATUS_FULFILLED
         queueMicrotask(() => {
+          if(this.status !== PROMISE_STATUS_PENDING) return
+          this.status = PROMISE_STATUS_FULFILLED
           this.value = value
           this.onFulfilledFns.forEach( fn => {
             fn(this.value)
@@ -30,8 +55,9 @@ class AgilityPromise {
 
     const reject = reason => {
       if(this.status === PROMISE_STATUS_PENDING) {
-        this.status = PROMISE_STATUS_REJECTED
         queueMicrotask(() => {
+          if(this.status !== PROMISE_STATUS_PENDING) return
+          this.status = PROMISE_STATUS_REJECTED
           this.reason = reason
           this.onRejectedFns.forEach( fn => {
             fn(this.value)
@@ -40,11 +66,46 @@ class AgilityPromise {
       }
     }
 
-    executor(resolve, reject)
+    try {
+      executor(resolve, reject)
+    } catch(err) {
+      reject(err)
+    }
   }
 
   then(onFulfilled, onRejected) {
-    this.onFulfilledFns.push(onFulfilled)
-    this.onRejectedFns.push(onRejected)
+    return new AgilityPromise((resolve, reject) => {
+      if(this.status === PROMISE_STATUS_PENDING) {
+        this.onFulfilledFns.push(() => {
+          execFunctionWithCatchError(onFulfilled, this.value, resolve, reject)
+        })
+        this.onRejectedFns.push(() => {
+          execFunctionWithCatchError(onRejected, this.reason, resolve, reject)
+        })
+      }
+  
+      if(this.status === PROMISE_STATUS_FULFILLED && onFulfilled) {
+        execFunctionWithCatchError(onFulfilled, this.value, resolve, reject)
+      }
+      if(this.status === PROMISE_STATUS_REJECTED && onRejected) {
+        execFunctionWithCatchError(onRejected, this.reason, resolve, reject)
+      }
+    })
   }
 }
+
+
+let p = new AgilityPromise((resolve , reject) => {
+  // 异步操作
+  setTimeout(() => {
+    resolve('OK')
+  },1000)
+}) 
+
+p.then(value => {
+  console.log(value)
+},reason => {
+  console.log(reason)
+})
+
+console.log(p)
