@@ -26,7 +26,7 @@ const p3 = new Promise((resolve, reject) => {
   reject('p3 reject')
 })
 // [[PromiseState]] : "rejected"
-// [[PromiseResult]]: p2 resolve
+// [[PromiseResult]]: p3 reject
 console.log(p3)
 
 // 验证p4(error)状态
@@ -166,4 +166,89 @@ p12.then(res => {
   console.log('err: ', err)
 }).finally(() => {
   console.log('我是finally')
+})
+
+/**
+ * 6.resolve和reject方法
+ */
+
+// 验证resolve静态方法
+Promise.resolve('OK').then((res) => {
+  console.log(res)
+})
+
+// 验证reject静态方法
+Promise.reject('err').catch(err => {
+  console.log(err)
+})
+
+/**
+ * 7.实现all和allSettled
+ */
+
+// 全部正确返回情况
+const p13 = Promise.resolve('p13')
+const p14 = Promise.resolve('p14')
+const p15 = Promise.resolve('p15')
+
+Promise.all([p13,p14,p15]).then(res => {
+  console.log('all promise: ', res)
+}).catch(err => {
+  console.log('all promise: ', err)
+})
+// 打印的顺序调换
+// Promise.all([p15,p14,p13]).then(res => {
+//   console.log('all promise: ', res)
+// }).catch(err => {
+//   console.log('all promise: ', err)
+// })
+
+// 延迟返回
+const p16 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('p16')
+  }, 1000)
+})
+
+const p17 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('p17')
+  }, 2000)
+})
+
+const p18 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('p18')
+  }, 3000)
+})
+
+Promise.all([p16,p17,p18]).then(res => {
+  console.log('all promise: ', res)
+}).catch(err => {
+  console.log('all promise: ', err)
+})
+
+// 中间有错误的情况
+const p19 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('p19')
+  }, 1000)
+})
+
+const p20 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    reject('err p20')
+  }, 2000)
+})
+
+const p21 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('p21')
+  }, 3000)
+})
+
+Promise.all([p19,p20,p21]).then(res => {
+  console.log('all promise: ', res)
+}).catch(err => {
+  console.log('all promise: ', err)
 })
