@@ -201,4 +201,25 @@ class AgilityPromise {
       
     } )
   }
+
+  // 定义allSettled静态方法
+  static allSettled(promises) {
+    return new AgilityPromise((resolve, reject) => {
+      const result = []
+      promises.forEach((promise, index) => {
+        let resultObj = {}
+        promise.then(res => {
+          resultObj.status = 'fulfilled'
+          resultObj.value = res
+          result[index] = resultObj
+          if(result.length === promises.length) resolve(result)
+        }, err => {
+          resultObj.status = 'rejected'
+          resultObj.reason = err
+          result[index] = resultObj
+          if(result.length === promises.length) resolve(result)
+        })
+      })
+    }) 
+  }
 }

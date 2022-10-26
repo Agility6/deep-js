@@ -252,3 +252,29 @@ Promise.all([p19,p20,p21]).then(res => {
 }).catch(err => {
   console.log('all promise: ', err)
 })
+
+// allSettled方法的验证
+const p22 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    // resolve('p1~ok')
+    reject('p22~err')
+  }, 1000)
+})
+
+const p23 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    // resolve('p2~ok')
+    reject('p23~err')
+  }, 2000)
+})
+
+const p24 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    // resolve('p3~ok')
+    reject('p24~err')
+  }, 3000)
+})
+
+Promise.allSettled([p22,p23,p24]).then(res => {
+  console.log('res: ', res)
+})
