@@ -278,3 +278,64 @@ const p24 = new Promise((resolve, reject) => {
 Promise.allSettled([p22,p23,p24]).then(res => {
   console.log('res: ', res)
 })
+
+
+/**
+ * 8.实现race和any方法
+ */
+
+// race
+const p25 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    // resolve("p1 resolve")
+    reject("p25 reject error")
+  }, 3000)
+})
+
+const p26 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve("p26 resolve")
+    // reject("p2 reject error")
+  }, 2000)
+})
+
+const p27 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve("p27 resolve")
+  }, 5000)
+})
+
+Promise.race([p25,p26,p27]).then(res => {
+  console.log('race promise', res)
+}).catch(err => {
+  console.log("race promise err:", err)
+})
+
+// any
+
+const p28 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    // resolve('okk')
+    reject('p28 err')
+  }, 1000)
+})
+
+const p29 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('p29 okk')
+    // reject('p2 err')
+  }, 2000)
+})
+
+const p30 = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    // resolve('p3 okk')
+    reject('p30 err')
+  }, 3000)
+})
+
+Promise.any([p28,p29,p30]).then(res => {
+  console.log(res)
+}).catch(err => {
+  console.log(err)
+})
