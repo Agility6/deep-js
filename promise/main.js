@@ -81,19 +81,19 @@ class AgilityPromise {
 
     return new AgilityPromise((resolve, reject) => {
       if(this.status === PROMISE_STATUS_PENDING) {
-        if(onFulfilled) this.onFulfilledFns.push(() => {
+        this.onFulfilledFns.push(() => {
           execFunctionWithCatchError(onFulfilled, this.value, resolve, reject)
         })
-        if(onRejected) this.onRejectedFns.push(() => {
+        this.onRejectedFns.push(() => {
           execFunctionWithCatchError(onRejected, this.reason, resolve, reject)
         })
       }
   
-      if(this.status === PROMISE_STATUS_FULFILLED && onFulfilled) {
-        if(onFulfilled) execFunctionWithCatchError(onFulfilled, this.value, resolve, reject)
+      if(this.status === PROMISE_STATUS_FULFILLED) {
+        execFunctionWithCatchError(onFulfilled, this.value, resolve, reject)
       }
-      if(this.status === PROMISE_STATUS_REJECTED && onRejected) {
-        if(onRejected)  execFunctionWithCatchError(onRejected, this.reason, resolve, reject)
+      if(this.status === PROMISE_STATUS_REJECTED) {
+        execFunctionWithCatchError(onRejected, this.reason, resolve, reject)
       }
     })
   }
@@ -107,6 +107,83 @@ class AgilityPromise {
       onFinally()
     }, () => {
       onFinally()
+    })
+  }
+
+  static resolve(value) {
+    return new AgilityPromise(resolve => { resolve(value) })
+  }
+  
+  static reject(reason) {
+    return new AgilityPromise((resolve, reject) => {
+      reject(reason)
+    })
+  }
+
+  static all(promises) {
+    return new AgilityPromise((resolve, reject) => {
+      const resultArr = []
+      promises.forEach((promise, index) => {
+        
+        if(promise instanceof AgilityPromise) {
+          promise.then(res => {
+            
+            resultArr[index] = res
+            
+            if(resultArr.length === promises.length) resolve(resultArr)
+          }, err => {
+            reject(err)
+          })
+        } else {
+          resultArr[index] = promise
+          if(resultArr.length === promises.length) resolve(resultArr)
+        }
+      })
+      
+    } )
+  }
+
+  static allSettled(promises) {
+    return new AgilityPromise((resolve, reject) => {
+      const result = []
+      promises.forEach((promise, index) => {
+        let resultObj = {}
+        promise.then(res => {
+          resultObj.status = 'fulfilled'
+          resultObj.value = res
+          result[index] = resultObj
+          if(result.length === promises.length) resolve(result)
+        }, err => {
+          resultObj.status = 'rejected'
+          resultObj.reason = err
+          result[index] = resultObj
+          if(result.length === promises.length) resolve(result)
+        })
+      })
+    }) 
+  }
+
+  static race(promises) {
+    return new AgilityPromise((resolve, reject) => {
+      promises.forEach(promise => {
+        promise.then(resolve,reject)
+      })
+    })
+  }
+
+  static any(promises) {
+    return new AgilityPromise((resolve, reject) => {
+      const result = []
+      promises.forEach((promise,index) => {
+        promise.then(res => {
+          resolve(res)
+        }, err => {
+          result[index] = err
+          if(result.length === promises.length) {
+            reject('All promises were rejected')
+          }
+        })
+      })
     })
   }
 
