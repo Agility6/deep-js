@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script type="text/javascript" src="http://www.cornify.com/js/cornify.js"></script>
+  <style>
+    .content {
+      color: skyblue;
+      font-size: 30px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="content">请输入: agility</div>
+  <script>
+    
+    const inputValue = document.createElement('div')
+    const keysArr = []
+    const TARGET = 'agility'
+    window.addEventListener('keyup', (e) => {
+      const regex = /[a-z]/g
+      if(e.key.length === 1 && e.key.match(regex)) {
+        keysArr.push(e.key)
+        keysArr.splice(0, keysArr.length - TARGET.length)
+        inputValue.innerText = keysArr.join('')
+        document.body.appendChild(inputValue)
+        if(keysArr.join('').includes(TARGET)) {
+          cornify_add()
+        }
+      }
+    })    
+  </script>
+</body>
+</html>
